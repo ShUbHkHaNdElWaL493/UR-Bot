@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+  <xacro:macro name="tool_macro" params="cobotizur_type parent">
+
+    <xacro:property name="tool_name" value=""/>
+    <xacro:property name="tool_origin_xyz" value="0 0 0"/>
+    <xacro:property name="tool_origin_rpy" value="0 0 0"/>
+    <xacro:property name="tool_collision" value="0 0 0"/>
+    <xacro:property name="tool_offset" value="0 0 0"/>
+    <xacro:if value="${cobotizur_type == 'CT10'}">
+      <xacro:property name="tool_name" value="VQ10"/>
+      <xacro:property name="tool_origin_xyz" value="0 0.175 0.13"/>
+      <xacro:property name="tool_origin_rpy" value="3.142 0 0"/>
+      <xacro:property name="tool_collision" value="0.313 0.34 0.16"/>
+      <xacro:property name="tool_offset" value="0 0.175 0.16"/>
+    </xacro:if>
+    <xacro:if value="${cobotizur_type == 'CF20'}">
+      <xacro:property name="tool_name" value="VQ20"/>
+      <xacro:property name="tool_origin_xyz" value="0 0 0.1398"/>
+      <xacro:property name="tool_origin_rpy" value="3.142 0 3.142"/>
+      <xacro:property name="tool_collision" value="0.36 0.185 0.1768"/>
+      <xacro:property name="tool_offset" value="0 0 0.1768"/>
+    </xacro:if>
+
+    <link name="tool">
+      <visual>
+        <origin xyz="${tool_origin_xyz}" rpy="${tool_origin_rpy}"/>
+        <geometry>
+          <mesh filename="file://$(find cobotizur_description)/models/meshes/tool/${tool_name}.stl"/>
+        </geometry>
+        <material name="white">
+          <color rgba="1 1 1 1"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="${tool_origin_xyz.split()[0]} ${float(tool_origin_xyz.split()[1])/2} ${float(tool_collision.split()[2])/2}" rpy="3.142 0 0"/>
+        <geometry>
+          <box size="${tool_collision}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="1"/>
+        <origin xyz="${tool_origin_xyz}" rpy="3.142 0 0"/>
+        <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+      </inertial>
+    </link>
+
+    <joint name="tool_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 3.142"/>
+      <parent link="${parent}"/>
+      <child link="tool"/>
+    </joint>
+
+    <link name="vacuum_pad"/>
+
+    <joint name="vacuum_pad_joint" type="fixed">
+      <origin xyz="${tool_offset}" rpy="0 0 0"/>
+      <parent link="tool"/>
+      <child link="vacuum_pad"/>
+    </joint>
+
+    <link name="vacuum_pad0"/>
+
+    <joint name="vacuum_pad0_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <parent link="vacuum_pad"/>
+      <child link="vacuum_pad0"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>

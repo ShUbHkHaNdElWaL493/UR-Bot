@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="robot">
+
+  <xacro:include filename="$(find cobotizur_description)/models/core.xacro"/>
+
+  <!-- parameters -->
+
+  <!-- possible 'mode' values: gz, hw -->
+  <xacro:arg name="mode" default=""/>
+
+  <!-- possible 'cobotizur_type' values: CT10, CF20 -->
+  <xacro:arg name="cobotizur_type" default="CX"/>
+
+  <xacro:robot_macro
+    mode="$(arg mode)"
+    cobotizur_type="$(arg cobotizur_type)"
+  />
+
+</robot>
