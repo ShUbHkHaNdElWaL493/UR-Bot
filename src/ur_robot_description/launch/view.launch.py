@@ -10,7 +10,7 @@ def generate_launch_description():
     rviz_config = LaunchConfiguration("rviz_config")
 
     robot_state_publisher_node = IncludeLaunchDescription(PythonLaunchDescriptionSource(
-        PathJoinSubstitution([FindPackageShare("cobotizur_description"), "launch", "rsp.launch.py"])
+        PathJoinSubstitution([FindPackageShare("ur_robot_description"), "launch", "rsp.launch.py"])
     ))
 
     rviz_node = Node(
@@ -30,7 +30,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             "rviz_config",
-            default_value = PathJoinSubstitution([FindPackageShare("cobotizur_description"), "rviz", "view.rviz"]),
+            default_value = PathJoinSubstitution([FindPackageShare("ur_robot_description"), "rviz", "view.rviz"]),
             description = "Rviz config file (absolute path) to use when launching rviz."
         ),
         robot_state_publisher_node,

@@ -1,64 +1,29 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
 
-  <xacro:include filename="$(find cobotizur_description)/models/include/arm.xacro"/>
-  <xacro:include filename="$(find cobotizur_description)/models/include/cobotizur.xacro"/>
-  <xacro:include filename="$(find cobotizur_description)/models/include/conveyor.xacro"/>
-  <xacro:include filename="$(find cobotizur_description)/models/include/tool.xacro"/>
+  <xacro:include filename="$(find ur_robot_description)/models/include/arm.xacro"/>
+  <xacro:include filename="$(find ur_robot_description)/models/include/conveyor.xacro"/>
+  <xacro:include filename="$(find ur_robot_description)/models/include/tool.xacro"/>
 
-  <!-- parameters -->
-
-  <!-- possible 'mode' values: gz, hw -->
-  <xacro:arg name="mode" default=""/>
-
-  <!-- possible 'cobotizur_type' values: CT10, CF20 -->
-  <xacro:arg name="cobotizur_type" default="CX"/>
-  <xacro:property name="cobotizur_type" value="$(arg cobotizur_type)"/>
-
-  <!-- possible 'ur_type' values: ur3, ur3e, ur5, ur5e, ur7e, ur10, ur10e, ur12e, ur16e, ur15, ur20, ur30 -->
-  <xacro:property name="ur_type" value="urX"/>
-  <xacro:property name="ur_joint_xyz" value="0 0 0"/>
-  <xacro:property name="cb_joint_xyz" value="0 0 0"/>
-  <xacro:property name="conveyor_height" value="0"/>
-
-  <xacro:if value="${cobotizur_type == 'CT10'}">
-    <xacro:property name="ur_type" value="ur10"/>
-    <xacro:property name="ur_joint_xyz" value="0 0 0.97756792"/>
-    <xacro:property name="cb_joint_xyz" value="0 0.426 0.344"/>
-    <xacro:property name="conveyor_height" value="0.72"/>
-  </xacro:if>
-
-  <xacro:if value="${cobotizur_type == 'CF20'}">
-    <xacro:property name="ur_type" value="ur20"/>
-    <xacro:property name="ur_joint_xyz" value="0 0 1.4596"/>
-    <xacro:property name="cb_joint_xyz" value="0 0.426 0.344"/>
-    <xacro:property name="conveyor_height" value="1.08"/>
-  </xacro:if>
-
-  <xacro:macro name="robot_macro" params="mode cobotizur_type">
+  <xacro:macro name="robot_macro" params="mode ur_type robot_ip simulation_controllers">
     
     <link name="unit"/>
 
     <xacro:conveyor_macro
-      height="${conveyor_height}"
-      parent="unit"
-    />
-        
-    <xacro:cobotizur_macro
-      cobotizur_type="$(arg cobotizur_type)"
+      height="0.5"
       parent="unit"
     />
 
     <xacro:arm_macro
-      mode="$(arg mode)"
+      mode="${mode}"
       ur_type="${ur_type}"
-      parent="cobotizur"
-      arm_origin_xyz="${ur_joint_xyz}"
-      cb_origin_xyz="${cb_joint_xyz}"
+      parent="unit"
+      robot_ip="${robot_ip}"
+      simulation_controllers="${simulation_controllers}"
     />
 
     <xacro:tool_macro
-      cobotizur_type="$(arg cobotizur_type)"
+      mode="${mode}"
       parent="tool0"
     />
 

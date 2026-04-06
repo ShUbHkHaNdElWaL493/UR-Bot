@@ -8,7 +8,7 @@ def launch_setup(context):
 
     description_file = LaunchConfiguration("description_file")
     mode = LaunchConfiguration("mode")
-    cobotizur_type = LaunchConfiguration("cobotizur_type")
+    ur_type = LaunchConfiguration("ur_type")
     robot_ip = LaunchConfiguration("robot_ip")
     simulation_controllers = LaunchConfiguration("simulation_controllers")
 
@@ -20,8 +20,8 @@ def launch_setup(context):
         "mode:=",
         mode,
         " ",
-        "cobotizur_type:=",
-        cobotizur_type,
+        "ur_type:=",
+        ur_type,
         " ",
         "robot_ip:=",
         robot_ip,
@@ -60,7 +60,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             "description_file",
-            default_value = PathJoinSubstitution([FindPackageShare("cobotizur_description"), "models", "robot.urdf.xacro"]),
+            default_value = PathJoinSubstitution([FindPackageShare("ur_robot_description"), "models", "robot.urdf.xacro"]),
             description = "URDF/XACRO description file (absolute path) with the robot."
         ),
         DeclareLaunchArgument(
@@ -73,13 +73,25 @@ def generate_launch_description():
             ]
         ),
         DeclareLaunchArgument(
-            "cobotizur_type",
-            default_value = "CT10",
-            description = "Type/series of used cobotizur.",
-            choices = [
-                "CT10",
-                "CF20"
-            ]
+            "ur_type",
+            default_value = "ur5e",
+            description="Type/series of used UR robot.",
+            choices=[
+                "ur3",
+                "ur5",
+                "ur10",
+                "ur3e",
+                "ur5e",
+                "ur7e",
+                "ur10e",
+                "ur12e",
+                "ur16e",
+                "ur8long",
+                "ur15",
+                "ur18",
+                "ur20",
+                "ur30",
+            ],
         ),
         DeclareLaunchArgument(
             "robot_ip",
