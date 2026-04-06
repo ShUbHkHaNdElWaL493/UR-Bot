@@ -1,12 +1,20 @@
 FROM osrf/ros:humble-desktop
 
+SHELL ["/bin/bash", "-c"]
+
 RUN apt-get update && apt-get install -y \
-    ros-humble-turtlesim \
-    ros-humble-desktop \
+    ros-humble-robotiq* \
+    ros-humble-ur \
+    ros-humble-ur-* \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /ur_robot
+COPY ./src ./src
 
-RUN chmod +x entrypoint.sh
+RUN source /opt/ros/humble/setup.bash && colcon build
 
-ENTRYPOINT ["entrypoint.sh"]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
+CMD ["bash"]

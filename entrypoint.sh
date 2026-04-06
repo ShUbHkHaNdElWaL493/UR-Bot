@@ -1,9 +1,12 @@
 #!/bin/bash
 set -e
 
+# Source the main ROS 2 Humble setup
 source "/opt/ros/humble/setup.bash"
-colcon build --packages-select ur_robot_msgs
-source "install/setup.bash"
-colcon build
+
+# Source your specific workspace if it exists
+if [ -f "/ur_robot/install/setup.bash" ]; then
+  source "/ur_robot/install/setup.bash"
+fi
 
 exec "$@"
