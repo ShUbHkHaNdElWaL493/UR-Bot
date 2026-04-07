@@ -1,13 +1,11 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
-    
-    rviz_config = LaunchConfiguration("rviz_config")
 
     robot_state_publisher_node = IncludeLaunchDescription(PythonLaunchDescriptionSource(
         PathJoinSubstitution([FindPackageShare("ur_robot_description"), "launch", "rsp.launch.py"])
@@ -18,7 +16,7 @@ def generate_launch_description():
         executable = "rviz2",
         name = "rviz2",
         output = "log",
-        arguments = ["-d", rviz_config]
+        arguments = ["-d", PathJoinSubstitution([FindPackageShare("ur_robot_description"), "rviz", "view.rviz"])]
     )
 
     joint_state_publisher_node = Node(
@@ -28,11 +26,6 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        DeclareLaunchArgument(
-            "rviz_config",
-            default_value = PathJoinSubstitution([FindPackageShare("ur_robot_description"), "rviz", "view.rviz"]),
-            description = "Rviz config file (absolute path) to use when launching rviz."
-        ),
         robot_state_publisher_node,
         rviz_node,
         joint_state_publisher_node

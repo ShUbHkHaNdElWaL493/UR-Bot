@@ -7,7 +7,7 @@ networks:
 
 services:
   ursim:
-    image: universalrobots/ursim_e-series
+    image: universalrobots/ursim_${UR_SERIES}
     container_name: ursim
     networks:
       net:
@@ -21,11 +21,11 @@ services:
       - "50001-50004:50001-50004"
     volumes:
       - ./resources/externalcontrol-1.0.5.urcap:/urcaps/externalcontrol-1.0.5.jar
-      - ./resources/default.installation:/ursim/programs/default.installation
+      - ./resources/${UR_SERIES}/default.installation:/ursim/programs/default.installation
     stdin_open: true
     tty: true
     environment:
-      - ROBOT_MODEL=UR5e
+      - ROBOT_MODEL=${UR_MODEL}
   ur_robot:
     image: ur_robot
     container_name: ur_robot
@@ -37,6 +37,7 @@ services:
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
+      - UR_MODEL=${UR_MODEL}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${XAUTHORITY}:/root/.Xauthority

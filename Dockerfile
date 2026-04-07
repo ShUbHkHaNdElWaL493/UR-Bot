@@ -12,6 +12,8 @@ WORKDIR /ur_robot
 COPY ./src ./src
 
 RUN source /opt/ros/humble/setup.bash && colcon build
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+RUN echo "source /ur_robot/install/setup.bash" >> ~/.bashrc
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

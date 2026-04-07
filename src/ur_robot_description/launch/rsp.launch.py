@@ -1,6 +1,6 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
-from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import Command, EnvironmentVariable, FindExecutable, LaunchConfiguration, PathJoinSubstitution, PythonExpression
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
@@ -8,7 +8,6 @@ def launch_setup(context):
 
     description_file = LaunchConfiguration("description_file")
     mode = LaunchConfiguration("mode")
-    ur_type = LaunchConfiguration("ur_type")
     robot_ip = LaunchConfiguration("robot_ip")
     simulation_controllers = LaunchConfiguration("simulation_controllers")
 
@@ -21,7 +20,7 @@ def launch_setup(context):
         mode,
         " ",
         "ur_type:=",
-        ur_type,
+        PythonExpression(["'", EnvironmentVariable("UR_MODEL"), "'.lower()"]),
         " ",
         "robot_ip:=",
         robot_ip,
@@ -73,29 +72,8 @@ def generate_launch_description():
             ]
         ),
         DeclareLaunchArgument(
-            "ur_type",
-            default_value = "ur5e",
-            description="Type/series of used UR robot.",
-            choices=[
-                "ur3",
-                "ur5",
-                "ur10",
-                "ur3e",
-                "ur5e",
-                "ur7e",
-                "ur10e",
-                "ur12e",
-                "ur16e",
-                "ur8long",
-                "ur15",
-                "ur18",
-                "ur20",
-                "ur30",
-            ],
-        ),
-        DeclareLaunchArgument(
             "robot_ip",
-            default_value = "0.0.0.0",
+            default_value = "192.168.56.101",
             description = "IP address by which the robot can be reached."
         ),
         DeclareLaunchArgument(
