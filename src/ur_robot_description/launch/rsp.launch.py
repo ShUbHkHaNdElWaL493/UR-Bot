@@ -9,12 +9,12 @@ def launch_setup(context):
     description_file = LaunchConfiguration("description_file")
     mode = LaunchConfiguration("mode")
     robot_ip = LaunchConfiguration("robot_ip")
-    simulation_controllers = LaunchConfiguration("simulation_controllers")
+    controllers = LaunchConfiguration("controllers")
 
     robot_description = Command([
         PathJoinSubstitution([FindExecutable(name = "xacro")]),
         " ",
-        description_file,
+        PathJoinSubstitution([FindPackageShare("ur_robot_description"), "models", "robot.urdf.xacro"]),
         " ",
         "mode:=",
         mode,
@@ -26,7 +26,7 @@ def launch_setup(context):
         robot_ip,
         " ",
         "simulation_controllers:=",
-        simulation_controllers
+        controllers
     ])
 
     robot_state_publisher_node = None
@@ -58,11 +58,6 @@ def launch_setup(context):
 def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
-            "description_file",
-            default_value = PathJoinSubstitution([FindPackageShare("ur_robot_description"), "models", "robot.urdf.xacro"]),
-            description = "URDF/XACRO description file (absolute path) with the robot."
-        ),
-        DeclareLaunchArgument(
             "mode",
             default_value = "hw",
             description = "Robot mode.",
@@ -73,11 +68,11 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             "robot_ip",
-            default_value = "192.168.56.101",
+            default_value = "0.0.0.0",
             description = "IP address by which the robot can be reached."
         ),
         DeclareLaunchArgument(
-            "simulation_controllers",
+            "controllers",
             default_value = '""',
             description = "Absolute path to YAML file with the controllers configuration."
         ),
