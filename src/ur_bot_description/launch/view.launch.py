@@ -8,7 +8,7 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
 
     robot_state_publisher_node = IncludeLaunchDescription(PythonLaunchDescriptionSource(
-        PathJoinSubstitution([FindPackageShare("ur_robot_description"), "launch", "rsp.launch.py"])
+        PathJoinSubstitution([FindPackageShare("ur_bot_description"), "launch", "rsp.launch.py"])
     ))
 
     rviz_node = Node(
@@ -16,7 +16,7 @@ def generate_launch_description():
         executable = "rviz2",
         name = "rviz2",
         output = "log",
-        arguments = ["-d", PathJoinSubstitution([FindPackageShare("ur_robot_description"), "rviz", "view.rviz"])]
+        arguments = ["-d", PathJoinSubstitution([FindPackageShare("ur_bot_description"), "rviz", "view.rviz"])]
     )
 
     joint_state_publisher_node = Node(
