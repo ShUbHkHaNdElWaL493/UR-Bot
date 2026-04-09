@@ -26,9 +26,9 @@ services:
     tty: true
     environment:
       - ROBOT_MODEL=${UR_MODEL}
-  ur_robot:
-    image: ur_robot
-    container_name: ur_robot
+  ur_bot:
+    image: ur_bot
+    container_name: ur_bot
     networks:
       net:
         ipv4_address: 192.168.56.64
