@@ -17,11 +17,11 @@ def launch_setup(context):
     nodes = []
 
     robot_state_publisher_node = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(PathJoinSubstitution([FindPackageShare("ur_robot_description"), "launch", "rsp.launch.py"])),
+        PythonLaunchDescriptionSource(PathJoinSubstitution([FindPackageShare("ur_bot_description"), "launch", "rsp.launch.py"])),
         launch_arguments = {
             "mode" : mode,
             "robot_ip" : robot_ip,
-            "controllers" : PathJoinSubstitution([FindPackageShare("ur_robot_control"), "config", f"{mode.perform(context)}_controllers.yaml"])
+            "controllers" : PathJoinSubstitution([FindPackageShare("ur_bot_control"), "config", f"{mode.perform(context)}_controllers.yaml"])
         }.items()
     )
     nodes.append(robot_state_publisher_node)
@@ -83,11 +83,11 @@ def launch_setup(context):
             name = "controller_manager",
             parameters = [
                 PathJoinSubstitution([
-                    FindPackageShare("ur_robot_control"),
+                    FindPackageShare("ur_bot_control"),
                     "config",
                     f"{EnvironmentVariable('UR_SERIES').perform(context)}_update_rate.yaml"
                 ]),
-                ParameterFile(PathJoinSubstitution([FindPackageShare("ur_robot_control"), "config", f"{mode.perform(context)}_controllers.yaml"]), allow_substs = True)
+                ParameterFile(PathJoinSubstitution([FindPackageShare("ur_bot_control"), "config", f"{mode.perform(context)}_controllers.yaml"]), allow_substs = True)
             ],
             remappings = [(
                 "~/robot_description", "/robot_description"
@@ -162,6 +162,7 @@ def launch_setup(context):
             ]
             + controllers_active
         )
+        nodes.append(active_controllers_spawner_node)
 
         inactive_controllers_spawner_node = Node(
             package = "controller_manager",
@@ -173,6 +174,7 @@ def launch_setup(context):
             ]
             + controllers_inactive,
         )
+        nodes.append(inactive_controllers_spawner_node)
 
     rviz_node = Node(
         package = "rviz2",
@@ -208,7 +210,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             "rviz_config",
-            default_value = PathJoinSubstitution([FindPackageShare("ur_robot_description"), "rviz", "view.rviz"]),
+            default_value = PathJoinSubstitution([FindPackageShare("ur_bot_description"), "rviz", "view.rviz"]),
             description = "Rviz config file (absolute path) to use when launching rviz."
         ),
         DeclareLaunchArgument(

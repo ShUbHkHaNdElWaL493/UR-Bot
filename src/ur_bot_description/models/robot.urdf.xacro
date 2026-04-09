@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="robot">
+
+  <xacro:include filename="$(find ur_bot_description)/models/include/arm.xacro"/>
+  <xacro:include filename="$(find ur_bot_description)/models/include/conveyor.xacro"/>
+  <xacro:include filename="$(find ur_bot_description)/models/include/tool.xacro"/>
+
+  <!-- parameters -->
+
+  <!-- possible 'mode' values: gz, hw -->
+  <xacro:arg name="mode" default=""/>
+
+  <!-- possible 'ur_type' values: ur3, ur5, ur10, ur3e, ur5e, ur7e, ur10e, ur12e, ur16e, ur8long, ur15, ur18, ur20, ur30 -->
+  <xacro:arg name="ur_type" default="urX"/>
+  <xacro:arg name="robot_ip" default="0.0.0.0"/>
+  <xacro:arg name="simulation_controllers" default=""/>
+  
+  <link name="world"/>
+
+  <xacro:arm_macro
+    mode="$(arg mode)"
+    ur_type="$(arg ur_type)"
+    parent="world"
+    robot_ip="$(arg robot_ip)"
+    simulation_controllers="$(arg simulation_controllers)"
+  />
+
+  <xacro:tool_macro
+    mode="$(arg mode)"
+    parent="tool0"
+  />
+
+  <xacro:if value="${mode == 'gz'}">
+    <gazebo reference="world">
+    </gazebo>
+    <gazebo>
+      <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+        <parameters>$(arg simulation_controllers)</parameters>
+        <controller_manager_node_name>controller_manager</controller_manager_node_name>
+      </plugin>
+    </gazebo>
+  </xacro:if>
+
+</robot>

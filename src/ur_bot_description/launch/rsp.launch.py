@@ -6,7 +6,6 @@ from launch_ros.substitutions import FindPackageShare
 
 def launch_setup(context):
 
-    description_file = LaunchConfiguration("description_file")
     mode = LaunchConfiguration("mode")
     robot_ip = LaunchConfiguration("robot_ip")
     controllers = LaunchConfiguration("controllers")
@@ -14,7 +13,7 @@ def launch_setup(context):
     robot_description = Command([
         PathJoinSubstitution([FindExecutable(name = "xacro")]),
         " ",
-        PathJoinSubstitution([FindPackageShare("ur_robot_description"), "models", "robot.urdf.xacro"]),
+        PathJoinSubstitution([FindPackageShare("ur_bot_description"), "models", "robot.urdf.xacro"]),
         " ",
         "mode:=",
         mode,
