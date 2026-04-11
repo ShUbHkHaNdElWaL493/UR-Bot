@@ -2,7 +2,11 @@ FROM osrf/ros:humble-desktop
 
 SHELL ["/bin/bash", "-c"]
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y software-properties-common && \
+    add-apt-repository -y ppa:sdurobotics/ur-rtde && \
+    apt-get update && apt-get install -y \
+    librtde \
+    librtde-dev \
     ros-humble-robotiq-* \
     ros-humble-ur \
     ros-humble-ur-* \
